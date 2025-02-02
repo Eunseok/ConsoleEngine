@@ -1,6 +1,6 @@
 using Core.Scenes;
 
-namespace Core.Managers;
+namespace Core.Scenes;
 
 // SceneManager: 여러 Scene을 관리하고 전환
 public static class SceneManager
