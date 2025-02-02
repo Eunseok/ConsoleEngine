@@ -34,7 +34,7 @@ public class Scene : Entity
 
     public virtual void Render()
     {
-        Console.Clear(); // 화면 초기화
+       // Console.Clear(); // 화면 초기화
 
         foreach (var gameObject in _gameObjects)
         {
