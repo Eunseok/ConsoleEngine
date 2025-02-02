@@ -20,20 +20,19 @@ public class Game
         //게임 메인루프
         while (isRunning)  
         {
-            InputManager.Update(); // 매 프레임 상태 업데이트
-            SceneManager.Update();  // 활성씬 업데이트
+            InputManager.Update(); // 입력 업데이트
             
+            SceneManager.Update();  // 활성씬 업데이트
             SceneManager.Render();  // 활성씬 랜더
             
             // ESC 키로 게임 종료
-            if (InputListener.IsKeyPressed(ConsoleKey.Escape))
-            {
-                isRunning = false;
-                break;
-            }
+             if (InputManager.GetKey("Escape"))
+             {
+                 isRunning = false;
+                 break;
+             }
             
-            
-            Thread.Sleep(16); // 프레임 속도 조정
+            Thread.Sleep(60); // 프레임 속도 조정
         }
     }
     

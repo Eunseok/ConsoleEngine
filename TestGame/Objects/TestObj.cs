@@ -1,5 +1,4 @@
 using Core.Input;
-using Core.Managers;
 using Core.Math;
 using Core.Objects;
 
@@ -22,6 +21,10 @@ public class TestObj : GameObject
             Velocity = new Vector2().Left();
         if(InputManager.GetKey("MoveRight"))
             Velocity = new Vector2().Right();
+        if(InputManager.GetKey("MoveUp"))
+            Velocity = new Vector2().Up();
+        if(InputManager.GetKey("MoveDown"))
+            Velocity = new Vector2().Down();
        
         Position += Velocity; // 현재 위치를 속도만큼 이동
     }

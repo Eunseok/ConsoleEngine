@@ -1,0 +1,10 @@
+{
+  "Escape": "Escape",
+  "MoveUp": "W",
+  "MoveDown": "S",
+  "MoveLeft": "A",
+  "MoveRight": "D",
+  "Jump": "Spacebar",
+  "Attack": "J",
+  "Test": "J"
+}
