@@ -1,3 +1,5 @@
+using Core.Components;
+using Core.Math;
 using Core.Objects;
     
 namespace Core.Scenes;
@@ -14,6 +16,7 @@ public class Scene : Entity
 
     public void AddObject(GameObject obj)
     {
+        //obj.AddComponent<Transform>();
         _gameObjects.Add(obj);
     }
 
@@ -24,11 +27,11 @@ public class Scene : Entity
         //     gameObject.Initialize();
         // }
     }
-    public virtual void Update()
+    public virtual void Update(float deltaTime)
     {
         foreach (var gameObject in _gameObjects)
         {
-            gameObject.Update();
+            gameObject.Update(deltaTime);
         }
     }
 
@@ -38,7 +41,10 @@ public class Scene : Entity
 
         foreach (var gameObject in _gameObjects)
         {
-            Console.SetCursorPosition(gameObject.Position.X, gameObject.Position.Y);
+            Transform transform = gameObject.GetComponent<Transform>();
+            Vector2 pos = transform.Position;
+            
+            Console.SetCursorPosition(pos.X, pos.Y);
             gameObject.Render();
         }
     }

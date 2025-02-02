@@ -10,4 +10,16 @@
       <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Assets\Player_Walk1.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\Player_Walk2.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\Player_Walk3.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

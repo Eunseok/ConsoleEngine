@@ -37,7 +37,7 @@ public class Vector2
     public Vector2 Down()
     {
         return new Vector2(0, 1);
-    }
+    } 
     
     public static Vector2 operator +(Vector2 v1, Vector2 v2)
     {

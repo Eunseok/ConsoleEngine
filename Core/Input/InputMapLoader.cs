@@ -24,13 +24,13 @@ public static class InputMapLoader
         if (!File.Exists(DatPath))
         {
             Console.WriteLine("InputMap.json 파일이 없습니다. 기본 데이터를 반환합니다.");
-            return new Dictionary<string, ConsoleKey>();
+            return MappingKeys;
         }
 
         try
         {
             string json = File.ReadAllText(DatPath);
-            return JsonConvert.DeserializeObject<Dictionary<string, ConsoleKey>>(json)?? new Dictionary<string, ConsoleKey>();
+            return JsonConvert.DeserializeObject<Dictionary<string, ConsoleKey>>(json)?? MappingKeys;
         }
         catch (Exception ex)
         {

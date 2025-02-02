@@ -17,8 +17,7 @@ public static class InputManager
 
         public DateTime KeyTimeouts = new();
     }
-
-
+    
     private static readonly TimeSpan Timeout = TimeSpan.FromMilliseconds(100); // 키 릴리스 타임아웃 설정
 
     //  키 상태 저장 (키 이름 -> 입력 상태)

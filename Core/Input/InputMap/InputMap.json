@@ -1,9 +1,9 @@
 {
   "Escape": "Escape",
-  "MoveUp": "W",
-  "MoveDown": "S",
-  "MoveLeft": "A",
-  "MoveRight": "D",
+  "MoveUp": "UpArrow",
+  "MoveDown": "DownArrow",
+  "MoveLeft": "LeftArrow",
+  "MoveRight": "RightArrow",
   "Jump": "Spacebar",
   "Attack": "J",
   "Test": "J"

@@ -34,9 +34,9 @@ public static class SceneManager
         _currentScene?.Initialize();
     }
     
-    public static void Update()
+    public static void Update(float deltaTime)
     {
-        _currentScene?.Update();
+        _currentScene?.Update(deltaTime);
     }
 
     public static void Render()
