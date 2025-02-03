@@ -3,6 +3,7 @@ using Core.Scenes;
 using Core.Components;
 using Core.Math;
 using Core.Objects;
+using Core.Input;
 using TestGame.Scripts;
 
 namespace TestGame.Scenes;
@@ -30,15 +31,20 @@ public class TestScene : Scene
             new AnimationFrame(walk3, 1)
         });
 
-        // Player GameObject 생성
-        GameObject player = new GameObject("Player");
-        player.AddComponent<Transform>().Position = new Vector2(10, 10);
-        player.AddComponent<Rigidbody>();
-        player.AddComponent<Renderer>();
-        player.AddComponent<PlayerScript>();
-        player.AddComponent<Animator>().SetAnimation(playerWalkAnimation);
+       //  // Player GameObject 생성
+       //  GameObject player = new GameObject("Player");
+       //  AddObject(player, new Vector2<int>(10, 10));
+       //  player.AddComponent<PlayerScript>();
+       //  player.AddComponent<Rigidbody>();
+       //  player.AddComponent<Animator>().SetAnimation(playerWalkAnimation);
+       //  
+       //  Text name = new Text("안은석");
+       // player.AddChild(name);
+       // name.GetComponent<Transform>().Position = new Vector2<int>(0, 1);
 
-        AddObject(player);
+       Button btn1= new Button(new Vector2<int>(20, 5), "Button1");
+       AddObject(btn1);
+
     }
     public override void Update(float deltaTime)
     {

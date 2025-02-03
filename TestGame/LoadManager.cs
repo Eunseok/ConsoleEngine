@@ -9,5 +9,6 @@ public static class LoadManager
     public static void LoadScenes()
     {
         SceneManager.CreateScene<TestScene>();
+        SceneManager.CreateScene<CreationScene>();
     }
 }

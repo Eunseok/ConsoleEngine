@@ -6,5 +6,9 @@
   "MoveRight": "RightArrow",
   "Jump": "Spacebar",
   "Attack": "J",
-  "Test": "J"
+  "UpArrow": "UpArrow",
+  "DownArrow": "DownArrow",
+  "LeftArrow": "LeftArrow",
+  "RightArrow": "RightArrow",
+  "Enter" : "Enter"
 }

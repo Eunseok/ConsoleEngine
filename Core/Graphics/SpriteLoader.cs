@@ -32,7 +32,7 @@ namespace Core.Graphics
             string[] defaultSpriteData =
             {
                 "???",
-                " ? ",
+                "???",
                 "???"
             };
             return new Sprite(defaultSpriteData);

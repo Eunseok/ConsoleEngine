@@ -13,16 +13,16 @@ public class PlayerScript : Script
     {
         
         Rigidbody rigidbody = Owner!.GetComponent<Rigidbody>();
-        rigidbody.Velocity = new Vector2().Zero();
-        
-        if(InputManager.GetKey("MoveLeft"))
-            rigidbody.Velocity = new Vector2().Left();
-        if(InputManager.GetKey("MoveRight"))
-            rigidbody.Velocity = new Vector2().Right();
-        if(InputManager.GetKey("MoveUp"))
-            rigidbody.Velocity = new Vector2().Up();
-        if(InputManager.GetKey("MoveDown"))
-            rigidbody.Velocity = new Vector2().Down();
+        rigidbody.Velocity = new Vector2<int>().Zero();
+
+        if (InputManager.GetKey("MoveLeft"))
+            rigidbody.Velocity = Vector2<int>.Left();
+        if (InputManager.GetKey("MoveRight"))
+            rigidbody.Velocity = Vector2<int>.Right();
+        if (InputManager.GetKey("MoveUp"))
+            rigidbody.Velocity = Vector2<int>.Up();
+        if (InputManager.GetKey("MoveDown"))
+            rigidbody.Velocity = Vector2<int>.Down();
         
     }
 

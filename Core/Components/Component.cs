@@ -10,6 +10,11 @@ public abstract class Component : Entity
     public Component(string name) : base(name)
     {
     }
+
+    public virtual void Initialize()
+    {
+        
+    }
     
     public virtual void Update(float deltaTime)
     {

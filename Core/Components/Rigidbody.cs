@@ -5,7 +5,7 @@ namespace Core.Components;
 
 public class Rigidbody : Component
 {
-    public Vector2 Velocity { get; set; } = new Vector2().Zero();
+    public Vector2<int> Velocity { get; set; } = new Vector2<int>().Zero();
     
 
     public Rigidbody() : base("Rigdibody")

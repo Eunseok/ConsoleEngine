@@ -4,14 +4,14 @@ namespace Core.Components;
 
 public class Transform : Component
 {
-    public Vector2 Position { get; set; }
-    public Vector2 Scale { get; set; } = new Vector2().One();
+    public Vector2<int> Position { get; set; } = new Vector2<int>().Zero();
+    public Vector2<int> Scale { get; set; } = new Vector2<int>().One();
     
 
     public Transform() : base("Transform")
     {
     }
-    public Transform(Vector2 pos) : base("Transform")
+    public Transform(Vector2<int> pos) : base("Transform")
     {
         Position = pos;
     }

@@ -6,6 +6,11 @@ public class Script : Component
     {
     }
 
+    public override void Initialize()
+    {
+        
+    }
+    
     public override void Update(float deltaTime)
     {
     }
