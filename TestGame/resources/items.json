@@ -1,0 +1,74 @@
+[
+  {
+    "ID": 1,
+    "strName": "수련자 갑옷",
+    "Type": 0,
+    "strDescription": "수련을 돕는 갑옷.",
+    "iEffect": 5,
+    "iPrice" : 1000
+  },
+  {
+    "ID": 2,
+    "strName": "무쇠 갑옷",
+    "Type": 0,
+    "strDescription": "튼튼한 무쇠 갑옷.",
+    "iEffect": 9,
+    "iPrice" : 2000
+  },
+  {
+    "ID": 3,
+    "strName": "스파르타의 갑옷",
+    "Type": 0,
+    "strDescription": "전설의 스파르타 갑옷.",
+    "iEffect": 15,
+    "iPrice": 3500
+  },
+  {
+    "ID": 4,
+    "strName": "낡은 검",
+    "Type": 1,
+    "strDescription": "흔한 낡은 검.",
+    "iEffect": 2,
+    "iPrice": 600
+  },
+  {
+    "ID": 5,
+    "strName": "청동 도끼",
+    "Type": 1,
+    "strDescription": "사용감 있는 청동 도끼.",
+    "iEffect": 5,
+    "iPrice": 1500
+  },
+  {
+    "ID": 6,
+    "strName": "스파르타의 창",
+    "Type": 1,
+    "strDescription": "전설의 스파르타 창.",
+    "iEffect": 7,
+    "iPrice": 1800
+  },
+  {
+    "ID": 7,
+    "strName": "은반지",
+    "Type": 2,
+    "strDescription": "체력을 올려주는 반지.",
+    "iEffect": 10,
+    "iPrice": 1200
+  },
+  {
+    "ID": 8,
+    "strName": "사파이어 목걸이",
+    "Type": 2,
+    "strDescription": "체력을 올려주는 목걸이.",
+    "iEffect": 15,
+    "iPrice": 2000
+  },
+  {
+    "ID": 9,
+    "strName": "신의 축복 팔찌",
+    "Type": 2,
+    "strDescription": "체력을 크게 올려줌.",
+    "iEffect": 25,
+    "iPrice": 3500
+  }
+]

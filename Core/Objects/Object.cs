@@ -93,7 +93,7 @@ namespace Core.Objects
         /// <param name="delay">삭제 Delay</param>
         public static void Destroy(GameObject gameObject,float delay = 0.0f)
         {
-
+            
             // Scene에서 제거할 GameObject 리스트에 추가
             SceneManager.CurrentScene.DestroyedObject(gameObject, delay);
             
@@ -101,13 +101,16 @@ namespace Core.Objects
         
         public static void Destroy(string name,float delay = 0.0f)
         {
-           
             
             // Scene에서 제거할 GameObject 리스트에 추가
             SceneManager.CurrentScene.DestroyedObject(name, delay);
             
         }
-        
+
+        public static void ObjectSort()
+        {
+            SceneManager.CurrentScene.ObjectSort();
+        }
         
     }
 }

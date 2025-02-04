@@ -6,7 +6,7 @@ public class LabelObject : GameObject
 {
     public LabelObject() : base("Label")
     {
-        Order = 2;
+        _order = 2;
     }
 
     public override void Awake()

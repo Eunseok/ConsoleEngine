@@ -30,12 +30,23 @@ public class Scene : Entity
         _gameObjects.Sort((l1, l2) => l1.Order.CompareTo(l2.Order)); // 렌더링 순서에 따라 정렬
     }
 
+    public void ObjectSort()
+    {
+
+        _gameObjects.Sort((l1, l2) => l1.Order.CompareTo(l2.Order)); // 렌더링 순서에 따라 정렬
+    }
+
     // 오브젝트 파괴 예약
     public void DestroyedObject(GameObject? obj, float delay)
     {
         if (obj == null) return;
         obj.LfeTime = delay;
         _deleteObjects.Add(obj);
+        foreach (var child in obj.GetChild())
+        {
+            DestroyedObject(child, delay);
+        }
+
     }
 
     public void DestroyedObject(string name, float delay)
@@ -44,6 +55,10 @@ public class Scene : Entity
         if (obj == null) return;
         obj.LfeTime = delay;
         _deleteObjects.Add(obj);
+        foreach (var child in obj.GetChild())
+        {
+            DestroyedObject(child, delay);
+        }
     }
 
     // 초기화 메서드 (상속 가능)

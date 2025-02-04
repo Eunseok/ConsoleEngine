@@ -35,7 +35,7 @@ namespace Core.Components
 
 
         // GameObject의 메시지를 보냄
-        protected void SendMessage(string eventKey, object? data = null)
+        public void SendMessage(string eventKey, object? data = null)
         {
             Owner?.BroadcastEvent(eventKey, data);
         }

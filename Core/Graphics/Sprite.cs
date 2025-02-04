@@ -19,6 +19,10 @@ namespace Core.Graphics
             UpdateOffsetToCenter(); // 초기화 후 중앙 위치 정의
         }
 
+        public void SetOffset(int x, int y)
+        {
+            Offset = new Vector2<int>(x, y);
+        }
         private int CalculateWidth()
         {
             if (Data == null || Data.Length == 0) return 0;

@@ -29,8 +29,9 @@ public class GameManager : Script
     public State CurrentState { get; set; } = State.Default;
 
     public BoxObject? Menu;
+    public PlayerScript? Player;
     
-    private int _menuIndex = 0;
+
 
     public GameManager()
     {
@@ -38,9 +39,18 @@ public class GameManager : Script
     }
     public override void Initialize()
     {
-       
+       Owner?.RegisterEventHandler("CloseMenu", _ => SetState(State.Default));
+       Owner?.RegisterEventHandler("ShowMenu", _ => SetState(State.Menu));
+       Owner?.RegisterEventHandler("ShowStatus", _ => SetState(State.Status));
+       Owner?.RegisterEventHandler("ShowInventory", _ => SetState(State.Inventory));
+       Owner?.RegisterEventHandler("StartRest", _ => SetState(State.Rest));
+       Owner?.RegisterEventHandler("Save", _ => SetState(State.Save));;
     }
 
+    public void SetState(State state)
+    {
+        CurrentState = state;
+    }
     protected override void OnUpdate(float deltaTime)
     {
         switch (CurrentState)
@@ -76,33 +86,27 @@ public class GameManager : Script
             Instance.Menu?.SetActive(!Instance.Menu.IsActive());
             if (Instance.Menu?.IsActive() == true)
             {
+                Owner.BroadcastEvent( "ShowMenu");
                 Game.CursorPosition = Instance.Menu?.GetChild()[0]?.GlobalPosition ?? Vector2<int>.Zero();
                 CurrentState = State.Menu;
+            }
+            else
+            {
+                GameManager.Instance.Owner.BroadcastEvent("CloseMenu");
             }
         }
 
     }
+
     public void MenuUpdate(float deltaTime)
     {
         if (InputManager.GetKey("Menu"))
         {
             Instance.Menu?.SetActive(false);
-            CurrentState = State.Default;
+            Owner.BroadcastEvent("CloseMenu");
         }
-
-        if (InputManager.GetKey("UpArrow"))
-        {
-            _menuIndex--;
-        }
-        if (InputManager.GetKey("DownArrow"))
-        {
-            _menuIndex++;
-        }
-        _menuIndex = Math.Clamp(_menuIndex, 0, Instance.Menu?.GetChild().Count -1 ?? 0);
-        Vector2<int> pos = Instance.Menu?.GetChild()[_menuIndex]?.GlobalPosition ?? Vector2<int>.Zero();
-        Game.CursorPosition = pos;
     }
-    
+
     public void StatusUpdate(float deltaTime)
     {
         

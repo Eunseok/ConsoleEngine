@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Input;
 using TestGame;
+using TextRPG;
 
 namespace ConsoleEngine;
 
@@ -8,8 +9,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.CursorVisible = false;
         
+        Console.CursorVisible = false;
+        // 아이템 Data 로드
+        DataLoader.LoadItems();
         // 씬 로드
         LoadManager.LoadScenes();
         //InputMap 로드

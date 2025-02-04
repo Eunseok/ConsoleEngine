@@ -15,7 +15,7 @@ public class ButtonObject : GameObject
 
     public ButtonObject() : base("Button")
     {
-        Order = 1;
+        _order = 1;
     }
 
     public void SetType(ButtonType type)
@@ -24,6 +24,10 @@ public class ButtonObject : GameObject
         SetButtonSprites(_type);
     }
 
+    public void SetOffset(int x, int y)
+    {
+        GetComponent<Renderer>()?.Sprite?.SetOffset(x, y);
+    }
     public override void Awake()
     {
         AddComponent<Transform>();
@@ -59,8 +63,11 @@ public class ButtonObject : GameObject
         GetComponent<Button>()?.SetSize(newWidth, newHeight);
     }
 
-    public void SetLabel(string text, ConsoleColor color = ConsoleColor.White) =>
+    public void SetLabel(string text, ConsoleColor color = ConsoleColor.White)
+    {
         _label?.SetText(text, color);
+        SetButtonSprites(_type);
+    }
 
     private void SetButtonSprites(ButtonType type)
     {
@@ -77,9 +84,12 @@ public class ButtonObject : GameObject
 
     private void CreateDefaultButtonSprites()
     {
-        string padding = new string(' ', _label?.ToString().Length+4 ?? 0);
+        int width = _label?.ToString().Sum(c =>
+            char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.OtherLetter ? 2 : 1
+        ) ?? 0;
+        string padding = new string(' ', width);
         _buttonSprites[(int)ButtonState.Normal] = new Sprite(new[] { $"[ {padding} ]" });
-        _buttonSprites[(int)ButtonState.Focused] = new Sprite(new[] { $">[ {padding} ]<" });
+        _buttonSprites[(int)ButtonState.Focused] = new Sprite(new[] { $">>[ {padding} ]<<" });
     }
 
     private void CreateEmphasizedButtonSprites()

@@ -21,7 +21,24 @@ namespace Core.Objects
         {
             _isActive = isActive;
         }
-        public int Order { get; set; } = 0; // 렌더링 순서를 위한 필드
+        public int _order { get; protected set; } = 0; // 렌더링 순서를 위한 필드
+
+        public void SetOrder(int order)
+        {
+            _order = order;
+        }
+        public int Order
+        {
+            get
+            {
+                if (Parent != null)
+                {
+                    return Parent.Order + _order;
+                }
+                
+                return _order;
+            }
+        }
 
         public void DestroyedTimer(float deltaTime)
         {
@@ -120,7 +137,14 @@ namespace Core.Objects
 
             return component;
         }
+        
+        public void AddGameManager(Component gameManager) 
+        {
+            gameManager.OnAttach(this);
+            _components.Add(gameManager);
+            gameManager.Initialize();
 
+        }
 
         // 특정 타입의 컴포넌트를 가져오기
         public T? GetComponent<T>() where T : Component
@@ -175,6 +199,11 @@ namespace Core.Objects
             {
                 _eventHandlers[eventKey] = handler;
             }
+            else
+            {
+                _eventHandlers[eventKey] += handler; // 기존 핸들러와 새 핸들러를 연결
+            }
+
         }
 
         // 메시지 핸들러 제거
