@@ -51,7 +51,7 @@ namespace Core.Components
             Vector2<int> position = Owner.GlobalPosition;
 
             return cursorPos.X >= position.X && cursorPos.X < position.X + Size.X &&
-                   cursorPos.Y >= position.Y && cursorPos.Y < position.Y + Size.Y;
+                   cursorPos.Y >= position.Y && cursorPos.Y < position.Y + Size.Y-1;
         }
         
     }

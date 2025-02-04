@@ -37,8 +37,8 @@ namespace Core.Objects
             // 새로운 GameObject 생성
             T gameObject = new T();
 
-            // 부모 설정
-            gameObject.Parent = parent;
+            // 자식 추가 
+            parent.AddChild(gameObject);
 
             // Scene에 추가
             SceneManager.CurrentScene.AddObject(gameObject);
@@ -50,8 +50,8 @@ namespace Core.Objects
             // 새로운 GameObject 생성
             T gameObject = new T();
 
-            // 부모 설정
-            gameObject.Parent = parent;
+            // 자식 추가 
+            parent.AddChild(gameObject);
 
             // Scene에 추가
             SceneManager.CurrentScene?.AddObject(gameObject);

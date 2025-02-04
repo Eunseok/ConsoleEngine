@@ -24,6 +24,8 @@ public static class SceneManager
 
     public static void SetActiveScene(string name)
     {
+        
+        _currentScene?.ClearObject();
         if (!_scenes.TryGetValue(name, out _currentScene))
         {
             Console.WriteLine($"Scene '{name}'이(가) 존재하지 않습니다.");
@@ -31,11 +33,7 @@ public static class SceneManager
         }
         _currentScene.Initialize();
     }
-
-    public static void Initialize()
-    {
-        _currentScene?.Initialize();
-    }
+    
     
     public static void Update(float deltaTime)
     {

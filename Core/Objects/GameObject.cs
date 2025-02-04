@@ -9,6 +9,7 @@ namespace Core.Objects
 
     {
         private readonly List<Component> _components = new(); //갖고있는 컴포넌트
+        private readonly List<GameObject> _children = new(); //갖고있는 자식 오브젝트
         public float LfeTime { get; set; } = 0.0f;
         private float _lifeDeltaTime = 0.0f;
 
@@ -75,6 +76,15 @@ namespace Core.Objects
         }
 
 
+        public void AddChild(GameObject child)
+        {
+            _children.Add(child);
+            child.Parent = this;
+        }
+        public List<GameObject> GetChild()
+        {
+            return _children;
+        }
 
         // 컴포넌트를 추가
         public T AddComponent<T>() where T : Component, new()

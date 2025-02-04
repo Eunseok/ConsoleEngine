@@ -14,6 +14,13 @@ public class Scene : Entity
     {
     }
 
+    // 모든 게임 오브젝트 삭제
+    public void ClearObject()
+    {
+        _gameObjects.Clear();
+        _deleteObjects.Clear();
+        
+    }
     // 게임 오브젝트 추가
     public void AddObject(GameObject? obj)
     {

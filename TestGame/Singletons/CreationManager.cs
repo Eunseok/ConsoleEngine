@@ -12,7 +12,8 @@ namespace TestGame.Singletons;
 public class CreationManager : Script
 {
     // 싱글톤 인스턴스
-    public static CreationManager? Instance { get; private set; }
+    private static CreationManager? _instance;
+    public static CreationManager Instance => _instance ??= new CreationManager();
 
     public bool IsInputEnabled { get; set; } = false;
 
@@ -73,8 +74,6 @@ public class CreationManager : Script
 
     public CreationManager()
     {
-        if (Instance == null)
-            Instance = this;
     }
 
     public override void Initialize()

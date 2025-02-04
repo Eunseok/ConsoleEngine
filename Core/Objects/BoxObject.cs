@@ -17,8 +17,6 @@ public class BoxObject : GameObject
     public override void Initialize()
     {
         
-
-        
         SetSize(10, 3);
        
     }

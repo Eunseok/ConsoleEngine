@@ -18,7 +18,7 @@ public class CreationScene : Scene
 
     public override void Initialize()
     {
-        GameObject gameManager = Instantiate<GameObject>(Vector2<int>.Zero());
+        GameObject gameManager = new GameObject();
         gameManager.AddComponent<CreationManager>();
     }
 

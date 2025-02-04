@@ -77,7 +77,7 @@ public class ButtonObject : GameObject
 
     private void CreateDefaultButtonSprites()
     {
-        string padding = new string(' ', _label?.ToString().Length ?? 0);
+        string padding = new string(' ', _label?.ToString().Length+4 ?? 0);
         _buttonSprites[(int)ButtonState.Normal] = new Sprite(new[] { $"[ {padding} ]" });
         _buttonSprites[(int)ButtonState.Focused] = new Sprite(new[] { $">[ {padding} ]<" });
     }
