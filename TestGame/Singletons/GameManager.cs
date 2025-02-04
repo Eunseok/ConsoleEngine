@@ -28,7 +28,13 @@ public class GameManager : Script
     public BoxObject? Menu;
     public PlayerScript? Player;
     
-
+    private string[] dungeonDiff = new string[] { "쉬운 던전", "일반 던전", "어려운 던전" };
+    int[] dungeonDef = { 5, 11, 17 }; //요구 방어력
+    int[] reward = new int[] { 1000, 1700, 2500 }; //gold보상
+    
+    public String[] DungeonDiff => dungeonDiff;
+    public int[] DungeonDef => dungeonDef;
+    public int[] Reward => reward;
 
     public GameManager()
     {
@@ -49,6 +55,8 @@ public class GameManager : Script
            CreateInfoMessage("구매에 성공했습니다.",ConsoleColor.Blue) );;
        Owner?.RegisterEventHandler("SellSuccess", _ => 
            CreateInfoMessage("판매에 성공했습니다.",ConsoleColor.Blue) );;
+       Owner?.RegisterEventHandler("RestingSuccess", _ => 
+           CreateInfoMessage("체력을 전부 회복했습니다.",ConsoleColor.Green) );;
     }
 
     public void SetState(State state)
@@ -81,6 +89,7 @@ public class GameManager : Script
             }
             else
             {
+                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
                 GameManager.Instance.Owner.BroadcastEvent("CloseMenu");
             }
         }
@@ -91,8 +100,11 @@ public class GameManager : Script
     {
         if (InputManager.GetKey("Menu"))
         {
+            if(Instance.Menu?.IsActive() != true) return;
+            
             Instance.Menu?.SetActive(false);
             Owner.BroadcastEvent("CloseMenu");
+            GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
         }
     }
 

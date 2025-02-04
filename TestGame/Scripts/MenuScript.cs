@@ -43,14 +43,14 @@ public class MenuScript : Script
                 GameManager.Instance.Owner.BroadcastEvent("ShowInventory");
                 break;
             case "휴식하기":
-                GameManager.Instance.Owner.BroadcastEvent("StartRest");
+                GameManager.Instance.Owner.BroadcastEvent("ShowRest");
                 break;
             case "저장/종료":
                 GameManager.Instance.Owner.BroadcastEvent("Save");
                 break;
             case "닫기":
                 GameManager.Instance.Owner.BroadcastEvent("CloseMenu");
-            
+                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
                 break;
             default:
                 break;

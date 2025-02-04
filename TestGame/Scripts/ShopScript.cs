@@ -89,6 +89,7 @@ public class ShopScript : Script
             case "나가기":
                 _state = State.Default;
                GameManager.Instance.Owner.BroadcastEvent("CloseMenu");
+                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
                 break;
         }
     }

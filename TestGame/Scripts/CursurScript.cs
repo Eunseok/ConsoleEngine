@@ -8,7 +8,7 @@ using TestGame.Singletons;
 
 namespace TestGame.Scripts;
 
-public class InventoryScript : Script
+public class CursurScript : Script
 {
     private int _menuIndex = 0;
     

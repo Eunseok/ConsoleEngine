@@ -68,6 +68,10 @@ public class ButtonObject : GameObject
         _label?.SetText(text, color);
         SetButtonSprites(_type);
     }
+    public void SetLabelColor(ConsoleColor color)
+    {
+        _label?.SetColor(color);
+    }
 
     private void SetButtonSprites(ButtonType type)
     {

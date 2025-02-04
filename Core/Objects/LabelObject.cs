@@ -18,6 +18,10 @@ public class LabelObject : GameObject
     {
         GetComponent<LabelComponent>()?.SetLabel(text, color);
     }
+    public void SetColor(ConsoleColor color)
+    {
+        GetComponent<LabelComponent>()?.SetColor(color);
+    }
 
     public override string ToString()
     {
