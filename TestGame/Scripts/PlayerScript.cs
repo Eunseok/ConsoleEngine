@@ -1,3 +1,4 @@
+using Core;
 using Core.Components;
 using Core.Input;
 using Core.MyMath;
@@ -50,6 +51,7 @@ namespace TestGame.Scripts
         {
             GameManager.Instance.Owner?.RegisterEventHandler("ShowMenu", o => { Owner.SetActive(false); });
             GameManager.Instance.Owner?.RegisterEventHandler("ShowInventory", o => { Owner.SetActive(false); });
+            Owner.RegisterEventHandler("ShowShop", o => { Owner.SetActive(false); });
             GameManager.Instance.Owner?.RegisterEventHandler("CloseMenu", o => { Owner.SetActive(true); });
             GameManager.Instance.Owner?.RegisterEventHandler("EquipItem", (object data) =>
             {
@@ -58,11 +60,36 @@ namespace TestGame.Scripts
                     EquipItem(item);
                 }
             });
+            GameManager.Instance.Owner?.RegisterEventHandler("BuyItem", (object data) =>
+            {
+                if (data is ItemScript item)
+                {
+                    BuyItem(item);
+                }
+            });
+            GameManager.Instance.Owner?.RegisterEventHandler("SellItem", (object data) =>
+            {
+                if (data is ItemScript item)
+                {
+                    SellItem(item);
+                }
+            });
         }
 
         protected override void OnUpdate(float deltaTime)
         {
             Input();
+            if (Owner.GlobalPosition.X < 10)
+            {
+                Owner.GetComponent<Transform>().SetPosition(Game.ConsoleCenter);
+                SendMessage("ShowShop");
+            }
+
+            if (Owner.GlobalPosition.X > Console.WindowWidth - 10)
+            {
+                Owner.GetComponent<Transform>().SetPosition(Game.ConsoleCenter);
+                SendMessage("ShowDungeon");
+            }
         }
 
         private void Input()
@@ -113,7 +140,48 @@ namespace TestGame.Scripts
             item.isEquipped = true;
             CalculateAddStats(); //추가 능력치 계싼
         }
+        
+        private void BuyItem(ItemScript item)
+        {
+            if (GameManager.Instance?.Player == null) return;
 
+
+            if (Inventory.FindAll(i => i.ID == item.ID).FirstOrDefault() != null)
+            {
+                GameManager.Instance.Owner.BroadcastEvent("Already");
+                return;
+            }
+
+            if (Gold < item.iPrice)
+            {
+                GameManager.Instance.Owner.BroadcastEvent("LessMoney");
+                return;
+            }
+            //구매 성공
+            
+            Gold -= item.iPrice;
+            GameManager.Instance.Owner.BroadcastEvent("BuySuccess");
+            Inventory.Add(item);
+            
+        }
+
+        private void SellItem(ItemScript item)
+        {
+            ItemScript sell = Inventory.Find(i => i.ID == item.ID);
+            if ( sell == null)
+                return;
+            
+
+            if (sell.isEquipped)
+            {
+                sell.isEquipped = false;
+                CalculateAddStats();
+            }
+            Gold += (int)(sell.iPrice*0.85);
+            Inventory.Remove(sell);
+            GameManager.Instance.Owner.BroadcastEvent("SellSuccess");
+        }
+        
         private void CalculateAddStats()
         {
             Stats stats = new Stats(0, 0, 0);

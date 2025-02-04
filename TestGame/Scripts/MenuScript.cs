@@ -12,6 +12,7 @@ public class MenuScript : Script
     
     protected override void OnUpdate(float deltaTime)
     {
+        
         int max = Owner?.GetChild().Count - 1 ?? 0;
         if (InputManager.GetKey("UpArrow"))
         {

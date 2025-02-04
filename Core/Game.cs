@@ -8,7 +8,7 @@ namespace Core;
 // Game: 게임 전체 관리
 public class Game
 {
-    private const int TargetFps = 30;
+    private const int TargetFps = 20;
     public static Vector2<int> ConsoleCenter = new Vector2<int>(Console.WindowWidth/2-1, Console.WindowHeight/2-1);
     public static Vector2<int> CursorPosition = ConsoleCenter;
     public Game()

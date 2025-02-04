@@ -1,3 +1,4 @@
+using System.Drawing;
 using Core;
 using Core.Components;
 using Core.Input;
@@ -15,11 +16,7 @@ public class GameManager : Script
     {
         Default,
         Menu,
-        Status,
-        Inventory,
-        Rest,
-        Save,
-        Exit
+
     }
     
     // 싱글톤 인스턴스
@@ -41,10 +38,17 @@ public class GameManager : Script
     {
        Owner?.RegisterEventHandler("CloseMenu", _ => SetState(State.Default));
        Owner?.RegisterEventHandler("ShowMenu", _ => SetState(State.Menu));
-       Owner?.RegisterEventHandler("ShowStatus", _ => SetState(State.Status));
-       Owner?.RegisterEventHandler("ShowInventory", _ => SetState(State.Inventory));
-       Owner?.RegisterEventHandler("StartRest", _ => SetState(State.Rest));
-       Owner?.RegisterEventHandler("Save", _ => SetState(State.Save));;
+       //Owner?.RegisterEventHandler("Save", _ => SetState(State.Save));;
+       Owner?.RegisterEventHandler("Already", _ => 
+           CreateInfoMessage("이미 보유한 장비입니다.",ConsoleColor.Red) );;
+       Owner?.RegisterEventHandler("Already", _ => 
+           CreateInfoMessage("이미 보유한 장비입니다.",ConsoleColor.Red) );;
+       Owner?.RegisterEventHandler("LessMoney", _ => 
+           CreateInfoMessage("골드가 부족합니다.",ConsoleColor.Red) );;
+       Owner?.RegisterEventHandler("BuySuccess", _ => 
+           CreateInfoMessage("구매에 성공했습니다.",ConsoleColor.Blue) );;
+       Owner?.RegisterEventHandler("SellSuccess", _ => 
+           CreateInfoMessage("판매에 성공했습니다.",ConsoleColor.Blue) );;
     }
 
     public void SetState(State state)
@@ -60,21 +64,6 @@ public class GameManager : Script
                 break;
             case State.Menu:
                 MenuUpdate(deltaTime);
-                break;
-            case State.Status:
-                StatusUpdate(deltaTime);
-                break;
-            case State.Inventory:
-                InventoryUpdate(deltaTime);
-                break;
-            case State.Rest:
-                RestUpdate(deltaTime);
-                break;
-            case State.Save:
-                SaveUpdate(deltaTime);
-                break;
-            case State.Exit:
-                ExitUpdate(deltaTime);
                 break;
         }
     }
@@ -107,31 +96,15 @@ public class GameManager : Script
         }
     }
 
-    public void StatusUpdate(float deltaTime)
+    public void CreateInfoMessage(string message, ConsoleColor color)
     {
+        var box = Instantiate<BoxObject>(Game.ConsoleCenter);
+        box.SetSize(30,5);
+        box.SetOrder(999);
+        var obj = Instantiate<LabelObject>(box);
+        obj.SetText(message, color);
         
-    }
-
-    public void InventoryUpdate(float deltaTime)
-    {
-    }
-
-    public void RestUpdate(float deltaTime)
-    {
-        
-    }
-
-    public void SaveUpdate(float deltaTime)
-    {
-        
-    }
-
-    public void ExitUpdate(float deltaTime)
-    {
-        
-    }
-    private void Input()
-    {
-
+        Destroy(box, 1.5f);
+        ObjectSort();
     }
 }

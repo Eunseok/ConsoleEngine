@@ -3,6 +3,7 @@ using Core.Components;
 using Core.Input;
 using Core.MyMath;
 using Core;
+using Core.Objects;
 using TestGame.Singletons;
 
 namespace TestGame.Scripts;
@@ -10,15 +11,12 @@ namespace TestGame.Scripts;
 public class InventoryScript : Script
 {
     private int _menuIndex = 0;
-
-    public void InitMenuIndex()
-    {
-        _menuIndex =  Owner?.GetChild().Count - 1 ?? 0;
-    }
+    
     
     protected override void OnUpdate(float deltaTime)
     {
-        int max = Owner?.GetChild().Count - 1 ?? 0;
+        List<GameObject> btns = Owner?.GetChild()?.FindAll(c => c is ButtonObject) ?? new  ();
+        int max = btns?.Count-1 ?? 0;
         if (InputManager.GetKey("UpArrow"))
         {
             _menuIndex--;
@@ -32,7 +30,7 @@ public class InventoryScript : Script
                 _menuIndex = 0;
         }
         
-        Vector2<int> pos = Owner?.GetChild()[_menuIndex]?.GlobalPosition ?? Vector2<int>.Zero();
+        Vector2<int> pos = btns?[_menuIndex]?.GlobalPosition ?? Vector2<int>.Zero();
         Game.CursorPosition = pos;
     }
     
