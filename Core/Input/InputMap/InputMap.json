@@ -6,16 +6,16 @@
     "Enter"
   ],
   "MoveUp": [
-    "W","UpArrow"
+    "W"
   ],
   "MoveDown": [
-    "S","DownArrow"
+    "S"
   ],
   "MoveLeft": [
-    "A","LeftArrow"
+    "A"
   ],
   "MoveRight": [
-    "D", "RightArrow"
+    "D"
   ],
   "Jump": [
     "Spacebar"

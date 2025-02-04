@@ -6,17 +6,25 @@ namespace Core.Components
     public class LabelComponent : Component
     {
         private string _label = "Text";
-        private ConsoleColor _color;
+        private ConsoleColor _color = ConsoleColor.White;
         
+        public void SetLabel(string label)
+        {
+            _label = label;
+        }
         public void SetLabel(string label,
-            ConsoleColor color = ConsoleColor.White)
+            ConsoleColor color)
         {
             _label = label;
             _color = color;
         }
+        public void SetColor(ConsoleColor color)
+        {
+            _color = color;
+        }
+   
         private int CalculateWidth()
         {
-
             // 첫 번째 줄의 문자열 폭 계산
             int width = _label.Sum(c =>
                 char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.OtherLetter ? 2 : 1
@@ -48,6 +56,11 @@ namespace Core.Components
             Console.WriteLine(text);
     
             Console.ResetColor();
+        }
+
+        public override string ToString()
+        {
+            return _label ?? "no text";
         }
     }
 }

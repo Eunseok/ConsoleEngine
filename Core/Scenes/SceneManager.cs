@@ -27,7 +27,9 @@ public static class SceneManager
         if (!_scenes.TryGetValue(name, out _currentScene))
         {
             Console.WriteLine($"Scene '{name}'이(가) 존재하지 않습니다.");
+            return;
         }
+        _currentScene.Initialize();
     }
 
     public static void Initialize()

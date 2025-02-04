@@ -8,4 +8,9 @@ public abstract class Entity
     {
         Name = name;
     }
+    
+    public void SetName(string name)
+    {
+        Name = name;
+    }
 }

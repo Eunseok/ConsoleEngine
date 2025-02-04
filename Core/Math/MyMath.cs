@@ -46,6 +46,20 @@ namespace Core.MyMath
         }
 
         
+        public static bool operator ==(Vector2<T> a, Vector2<T> b)
+        {
+            return (
+                (dynamic)a.X == (dynamic)b.X&&
+                (dynamic)a.Y == (dynamic)b.Y
+            );
+        }
+        public static bool operator !=(Vector2<T> a, Vector2<T> b)
+        {
+            return (
+                (dynamic)a.X != (dynamic)b.X&&
+                (dynamic)a.Y != (dynamic)b.Y
+            );
+        }
         public static Vector2<T> operator +(Vector2<T> a, Vector2<T> b)
         {
             return new Vector2<T>(

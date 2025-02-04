@@ -6,10 +6,10 @@ public class LabelObject : GameObject
 {
     public LabelObject() : base("Label")
     {
-        
+        Order = 2;
     }
 
-    public override void Initialize()
+    public override void Awake()
     {
         AddComponent<Transform>();
         AddComponent<LabelComponent>();
@@ -18,4 +18,10 @@ public class LabelObject : GameObject
     {
         GetComponent<LabelComponent>()?.SetLabel(text, color);
     }
+
+    public override string ToString()
+    {
+        return GetComponent<LabelComponent>()?.ToString() ?? "no text";
+    }
+
 }

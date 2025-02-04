@@ -7,43 +7,6 @@ namespace Core.Objects
     public static class Object
     {
         /// <summary>
-        /// 기존 GameObject를 주어진 위치에 추가합니다.
-        /// </summary>
-        /// <param name="original">추가할 GameObject</param>
-        /// <param name="position">새롭게 설정할 위치</param>
-        /// <returns>추가된 GameObject</returns>
-        public static GameObject Instantiate(GameObject original, Vector2<int> position)
-        {
-            // Scene에 추가
-            SceneManager.CurrentScene.AddObject(original);
-
-            // 위치 설정
-            SetPosition(original, position);
-
-            return original;
-        }
-
-        /// <summary>
-        /// 기존 GameObject를 부모 객체와 함께 추가합니다.
-        /// </summary>
-        /// <param name="original">추가할 GameObject</param>
-        /// <param name="parent">부모로 설정할 GameObject</param>
-        /// <returns>부모가 설정된 GameObject</returns>
-        public static GameObject Instantiate(GameObject original, GameObject parent)
-        {
-            // 부모 설정
-            original.Parent = parent;
-
-            // Scene에 추가
-            SceneManager.CurrentScene.AddObject(original);
-
-            // 부모의 위치 기반으로 객체 위치 설정
-            SetPositionFromParent(original, parent);
-
-            return original;
-        }
-
-        /// <summary>
         /// 새로운 GameObject를 주어진 위치에 생성합니다.
         /// </summary>
         /// <typeparam name="T">GameObject 유형</typeparam>
@@ -55,7 +18,7 @@ namespace Core.Objects
             T gameObject = new T();
 
             // Scene에 추가
-            SceneManager.CurrentScene.AddObject(gameObject);
+            SceneManager.CurrentScene?.AddObject(gameObject);
 
             // 위치 설정
             SetPosition(gameObject, position);
@@ -80,12 +43,28 @@ namespace Core.Objects
             // Scene에 추가
             SceneManager.CurrentScene.AddObject(gameObject);
 
-            // 부모의 위치 기반으로 객체 위치 설정
-            SetPositionFromParent(gameObject, parent);
+            return gameObject;
+        }
+        public static T Instantiate<T>(Vector2<int> position,GameObject parent) where T : GameObject, new()
+        {
+            // 새로운 GameObject 생성
+            T gameObject = new T();
+
+            // 부모 설정
+            gameObject.Parent = parent;
+
+            // Scene에 추가
+            SceneManager.CurrentScene?.AddObject(gameObject);
+
+            // 위치 설정
+            SetPosition(gameObject, position);
 
             return gameObject;
         }
 
+
+
+        
         /// <summary>
         /// GameObject의 Transform 컴포넌트를 사용하여 위치를 설정합니다.
         /// </summary>
@@ -106,5 +85,29 @@ namespace Core.Objects
             Vector2<int> parentPosition = parent.GetComponent<Transform>()?.Position ?? Vector2<int>.Zero();
             SetPosition(gameObject, parentPosition);
         }
+        
+        /// <summary>
+        /// 지정된 GameObject를 삭제합니다.
+        /// </summary>
+        /// <param name="gameObject">삭제할 GameObject</param>
+        /// <param name="delay">삭제 Delay</param>
+        public static void Destroy(GameObject gameObject,float delay = 0.0f)
+        {
+
+            // Scene에서 제거할 GameObject 리스트에 추가
+            SceneManager.CurrentScene.DestroyedObject(gameObject, delay);
+            
+        }
+        
+        public static void Destroy(string name,float delay = 0.0f)
+        {
+           
+            
+            // Scene에서 제거할 GameObject 리스트에 추가
+            SceneManager.CurrentScene.DestroyedObject(name, delay);
+            
+        }
+        
+        
     }
 }

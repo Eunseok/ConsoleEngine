@@ -16,18 +16,5 @@ namespace Core.Components
         }
         
 
-        // GameObject의 메시지를 보냄
-        protected void SendMessage(string eventKey, object? data = null)
-        {
-            Owner?.BroadcastEvent(eventKey, data);
-        }
-
-        // 메시지 수신
-        public override void OnMessageReceived(string eventKey, object data)
-        {
-            // Script에서 받을 메시지에 대한 처리 로직
-            Console.WriteLine($"Received {eventKey} with data: {data}");
-        }
-
     }
 }

@@ -1,4 +1,3 @@
-using Core.Components;
 using Core.Input;
 using Core.MyMath;
 using Core.Objects;
@@ -8,75 +7,82 @@ namespace Core.Scenes;
 // Scene: 게임의 상태(레벨, 화면)를 소유
 public class Scene : Entity
 {
-    private readonly List<GameObject> _gameObjects = new();     
+    private readonly List<GameObject> _gameObjects = new();
+    private readonly HashSet<GameObject> _deleteObjects = new();
 
     protected Scene(string name) : base(name)
     {
     }
 
-    // 게임 오브젝트 추가 (위치 미설정)
+    // 게임 오브젝트 추가
     public void AddObject(GameObject? obj)
     {
         if (obj == null) return;
-        _gameObjects.Add(obj);
         obj.Initialize();
+        _gameObjects.Add(obj);
+        _gameObjects.Sort((l1, l2) => l1.Order.CompareTo(l2.Order)); // 렌더링 순서에 따라 정렬
     }
 
-    // 게임 오브젝트 추가 (위치 설정 포함)
-    public void AddObject(GameObject? obj, Vector2<int> position)
+    // 오브젝트 파괴 예약
+    public void DestroyedObject(GameObject? obj, float delay)
     {
         if (obj == null) return;
-        AddObject(obj);
-       
-        obj.GetComponent<Transform>()?.SetPosition(position);
+        obj.LfeTime = delay;
+        _deleteObjects.Add(obj);
+    }
+
+    public void DestroyedObject(string name, float delay)
+    {
+        GameObject? obj = _gameObjects.Find(obj => obj.Name == name);
+        if (obj == null) return;
+        obj.LfeTime = delay;
+        _deleteObjects.Add(obj);
     }
 
     // 초기화 메서드 (상속 가능)
     public virtual void Initialize()
     {
-        // foreach (var obj in _gameObjects)
-        // {
-        //     obj.Initialize();
-        // }
+        // 필요 시 자식 클래스에서 구현
     }
 
-    // 매 프레임 업데이트 메서드 (상속 가능)
+    // 매 프레임 업데이트 메서드
     public virtual void Update(float deltaTime)
     {
-        // 화면 초기화
-        Console.Clear();
-        foreach (var obj in _gameObjects)
+        Console.Clear(); // 화면 초기화
+        UpdateActiveObjectsSafe(deltaTime);
+        UpdateDestroyedObjects(deltaTime);
+        HandleDestroyedObjects();
+    }
+
+    // 활성 오브젝트 업데이트 (안전한 컬렉션 복사를 사용)
+    private void UpdateActiveObjectsSafe(float deltaTime)
+    {
+        // 복사본을 사용하여 컬렉션 수정 방지
+        foreach (var obj in _gameObjects.ToList())
         {
-            obj.Update(deltaTime);
+            if (obj?.IsActive() ?? false)
+                obj.Update(deltaTime);
         }
-
-        HandleInput();
-        RenderCursor(); // 커서 그리기
-    }
-    
-
-    // 입력 처리 (상속 가능)
-    protected virtual void HandleInput()
-    {
-        if (InputManager.GetKey("LeftArrow"))
-            Game.CursorPosition.X -= 1;
-        if (InputManager.GetKey("RightArrow"))
-            Game.CursorPosition.X += 1;
-        if (InputManager.GetKey("UpArrow"))
-            Game.CursorPosition.Y -= 1;
-        if (InputManager.GetKey("DownArrow"))
-            Game.CursorPosition.Y += 1;
-
-        // 커서 위치 제한 (콘솔 창 범위 내로 제한)
-        Game.CursorPosition.X = System.Math.Clamp(Game.CursorPosition.X, 0, Console.WindowWidth - 1);
-        Game.CursorPosition.Y = System.Math.Clamp(Game.CursorPosition.Y, 0, Console.WindowHeight - 1);
     }
 
-    // 커서 렌더링
-    private void RenderCursor()
+    // 파괴 예정 오브젝트의 타이머 업데이트
+    private void UpdateDestroyedObjects(float deltaTime)
     {
-        Console.SetCursorPosition(Game.CursorPosition.X, Game.CursorPosition.Y-1);
-        Console.Write("👆");
-        Console.ResetColor(); // 색상 초기화
+        foreach (var obj in _deleteObjects)
+        {
+            obj.DestroyedTimer(deltaTime);
+        }
+    }
+
+    // 파괴 조건 만족 시 오브젝트 제거
+    private void HandleDestroyedObjects()
+    {
+        // 복사본을 사용하여 컬렉션 수정 방지
+        foreach (var obj in _deleteObjects.Where(obj => obj.IsDestroyed).ToList())
+        {
+            obj.BroadcastEvent("OnDestroy"); // 삭제 이벤트 발생
+            _gameObjects.Remove(obj); // _gameObjects에서 제거
+            _deleteObjects.Remove(obj); // _deleteObjects에서 제거
+        }
     }
 }

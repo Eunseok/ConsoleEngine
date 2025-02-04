@@ -1,37 +1,58 @@
 using Core.Components;
+using Core.Input;
+using Core.MyMath;
 
-using Core.Objects;
+
 
 namespace TestGame.Scripts
 {
     public class PlayerScript : Script
     {
-        private int _health = 100;
+        public string PlayerName { get; set; } = string.Empty; // 플레이어 이름
+        public string PlayerJob { get; set; } = string.Empty;  // 플레이어 직업
+        public int CurrentLevel { get; set; } = 1;            // 현재 레벨
 
-        public override void OnAttach(GameObject owner)
+        
+        public enum State
         {
-            base.OnAttach(owner);
-            // 메시지 핸들러 등록
-            SendMessage("PlayerSpawned", owner);
-        }
-
+            Idle,
+            Walking
+        };
+        State _state = State.Idle;
         protected override void OnUpdate(float deltaTime)
         {
-            // 단순 테스트용 메시지 예제
-            if (_health <= 0)
-            {
-                SendMessage("PlayerDied", null);
-            }
+            Input();
+
         }
 
-        public override void OnMessageReceived(string eventKey, object data)
+        private void Input()
         {
-            if (eventKey == "Damage")
-            {
-                int damage = (int)data;
-                _health -= damage;
-                Console.WriteLine($"Player took {damage} damage. Remaining Health: {_health}");
-            }
+            Vector2<int> velocity = Vector2<int>.Zero();
+            
+            if(InputManager.GetKey("LeftArrow"))
+                velocity.X -= 1;
+            if (InputManager.GetKey("RightArrow"))
+                velocity.X += 1;
+            if (InputManager.GetKey("UpArrow"))
+                velocity.Y -= 1;
+            if (InputManager.GetKey("DownArrow"))
+                velocity.Y += 1;
+           
+            Move(velocity);
         }
+
+        private void Move(Vector2<int> velocity)
+        {
+            if (velocity == Vector2<int>.Zero())
+            {
+                _state = State.Idle;
+                return;
+            }
+
+            _state = State.Walking;
+            Owner?.GetComponent<Transform>()?.Translate(velocity);
+        }
+
+        
     }
 }

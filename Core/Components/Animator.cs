@@ -6,6 +6,14 @@ namespace Core.Components
     {
         private  Animation? _animation;
         
+        public void StartAnimation()
+        {
+            _animation?.StartAnimation();
+        }
+        public void StopAnimation()
+        {
+            _animation?.StopAnimation();
+        }
 
         public void SetAnimation(Animation animation)
         {
