@@ -10,6 +10,7 @@ public static class SceneManager
     private static readonly Dictionary<string, Scene> _scenes = new Dictionary<string, Scene>();
     private static Scene? _currentScene;
     
+    public static Scene CurrentScene => _currentScene!;
     
     // 제네릭 메서드 사용하여 씬 생성
     public static T CreateScene<T>() where T : Scene, new()

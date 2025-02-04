@@ -40,6 +40,12 @@ namespace Core.Objects
         }
         public GameObject? Parent { get; set; } // 부모 객체
 
+        
+        public GameObject() : base("GameObject")
+        {
+            
+        }
+        
         public GameObject(string name) : base(name)
         {
             
