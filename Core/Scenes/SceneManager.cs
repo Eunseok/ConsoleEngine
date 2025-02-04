@@ -39,8 +39,8 @@ public static class SceneManager
         _currentScene?.Update(deltaTime);
     }
 
-    public static void Render()
-    {
-        _currentScene?.Render();
-    }
+    // public static void Render()
+    // {
+    //     _currentScene?.Render();
+    // }
 }

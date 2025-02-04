@@ -1,6 +1,6 @@
 using Core.Scenes;
 using Core.Input;
-using Core.Math;
+using Core.MyMath;
 
 namespace Core;
 
@@ -9,12 +9,12 @@ public class Game
 {
     private const int TargetFps = 30;
     public static Vector2<int> ConsoleCenter = new Vector2<int>(Console.WindowWidth/2-1, Console.WindowHeight/2-1);
-
+    public static Vector2<int> CursorPosition = ConsoleCenter;
     public Game()
     {
         InputManager.Initialize();
 
-        SceneManager.SetActiveScene("CreationScene");
+        SceneManager.SetActiveScene("TestScene");
         SceneManager.Initialize();
     }
 
@@ -39,7 +39,7 @@ public class Game
             // 입력 + 게임 로직 + 렌더링 처리
             InputManager.Update();
             SceneManager.Update(deltaTime);
-            SceneManager.Render();
+           // SceneManager.Render();
 
             // FPS 제한
             int elapsedTime = (int)(DateTime.Now - start).TotalMilliseconds;

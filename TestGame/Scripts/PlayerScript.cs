@@ -1,30 +1,37 @@
 using Core.Components;
-using Core.Graphics;
-using Core.Input;
-using Core.Math;
+
 using Core.Objects;
 
-namespace TestGame.Scripts;
-
-public class PlayerScript : Script
+namespace TestGame.Scripts
 {
-    
-    public override void Update(float deltaTime)
+    public class PlayerScript : Script
     {
-        
-        Rigidbody rigidbody = Owner!.GetComponent<Rigidbody>();
-        rigidbody.Velocity = new Vector2<int>().Zero();
+        private int _health = 100;
 
-        if (InputManager.GetKey("MoveLeft"))
-            rigidbody.Velocity = Vector2<int>.Left();
-        if (InputManager.GetKey("MoveRight"))
-            rigidbody.Velocity = Vector2<int>.Right();
-        if (InputManager.GetKey("MoveUp"))
-            rigidbody.Velocity = Vector2<int>.Up();
-        if (InputManager.GetKey("MoveDown"))
-            rigidbody.Velocity = Vector2<int>.Down();
-        
+        public override void OnAttach(GameObject owner)
+        {
+            base.OnAttach(owner);
+            // 메시지 핸들러 등록
+            SendMessage("PlayerSpawned", owner);
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            // 단순 테스트용 메시지 예제
+            if (_health <= 0)
+            {
+                SendMessage("PlayerDied", null);
+            }
+        }
+
+        public override void OnMessageReceived(string eventKey, object data)
+        {
+            if (eventKey == "Damage")
+            {
+                int damage = (int)data;
+                _health -= damage;
+                Console.WriteLine($"Player took {damage} damage. Remaining Health: {_health}");
+            }
+        }
     }
-
-
 }

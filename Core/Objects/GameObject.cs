@@ -1,102 +1,141 @@
-using Core.Math;
-using Core.Graphics;
+using System;
+using System.Collections.Generic;
 using Core.Components;
+using Core.MyMath; // `Vector2<T>` 사용을 위한 네임스페이스
 
-namespace Core.Objects;
-
-// GameObject: 게임 내 모든 객체의 기본 클래스
-public  class GameObject : Entity
+namespace Core.Objects
 {
-
-    
-    private readonly Dictionary<string, Component> _components = new Dictionary<string, Component>();
-    
-    public GameObject? Parent { get;  set; }
-    private List<GameObject> Children = new List<GameObject>();
-    
-    public Vector2<int> GlobalPosition() => Parent == null ? GetComponent<Transform>().Position : Parent.GetComponent<Transform>().Position + GetComponent<Transform>().Position;
-    
-    public GameObject(string name) : base(name)
+    public class GameObject : Entity
     {
-
-    }
-
-    public  void AddChild(GameObject child)
-    {
-        child.Parent = this;
-        child.Initialize();
-        Children.Add(child);
-    }
-
-    public virtual void Initialize()
-    {
-        AddComponent<Transform>();
-        AddComponent<Renderer>();
-    }
-
-    //public abstract void Initialize(); // 각 객체의 초기화시 처리할 작업
-    public virtual void Update(float deltaTime)
-    {
-        foreach (var comp in _components.Values)
-        {
-            comp.Update(deltaTime);
-        }
-
-        foreach (var child in Children)
-        {
-            child.Update(deltaTime);
-        }
-    }
-
-    public virtual void Render() // 각 객체가 매 프레임마다 그려질 작업
-    {
-        // int x = System.Math.Clamp(GlobalPosition().X, 0, Console.WindowWidth - Sprite.Width);
-        // int y = System.Math.Clamp(GlobalPosition().Y, 0, Console.WindowHeight - Sprite.Height);
-        // Console.SetCursorPosition(x, y);
+        private readonly List<Component> _components = new(); //갖고있는 컴포넌트
         
-        foreach (var comp in _components.Values)
+
+        // 이벤트 시스템
+        private Dictionary<string, Action<object>> _eventHandlers = new();
+
+        // 로컬 좌표 
+        public Vector2<int> LocalPosition
         {
-            comp.Render();
+            get
+            {
+                // Transform에서 현재 Position을 매번 가져옴
+                return GetComponent<Transform>()?.Position ?? Vector2<int>.Zero();
+            }
         }
 
-        foreach (var child in Children)
+        // 전역 좌표 계산 (getter)
+        public Vector2<int> GlobalPosition
         {
-            Transform transform = child.GetComponent<Transform>();
-            Vector2<int> pos = child.GlobalPosition();
-            Renderer renderer = child.GetComponent<Renderer>();
+            get
+            {
+                // 부모 객체가 있으면 부모의 GlobalPosition + 자신의 LocalPosition
+                if (Parent != null)
+                {
+                    return Parent.GlobalPosition + LocalPosition;
+                }
+
+                // 부모 객체가 없으면 LocalPosition이 곧 GlobalPosition
+                return LocalPosition;
+            }
+        }
+        public GameObject? Parent { get; set; } // 부모 객체
+
+        public GameObject(string name) : base(name)
+        {
             
-           //Console.SetCursorPosition(pos.X, pos.Y);
-            child.Render();
         }
-    }
-    
-    
 
-    
-    public T AddComponent<T>() where T : Component, new()
-    {
-        T comp = new T(); // 인스턴스 생성
-        comp.Owner = this;
-        comp.Initialize();
-        _components.TryAdd(comp.Name, comp);
         
-        return comp;   // 생성한 씬 반환
-    }
-    public T AddComponent<T>(T component) where T : Component, new()
-    {
-        component.Owner = this;
-        component.Initialize();
-        _components.TryAdd(component.Name, component);
 
-        return component;   // 생성한 씬 반환
-    }
+        // 컴포넌트를 추가
+        public T AddComponent<T>() where T : Component, new()
+        {
+            // GetComponent<T>() 호출
+            T? existingComponent = GetComponent<T>();
+    
+            // 이미 존재하면 반환
+            if (existingComponent != null) 
+                return existingComponent;
+            
+            T component = new T();
+            component.OnAttach(this);
+            _components.Add(component);
+            return component;
+        }
+        public T AddComponent<T>(params object[] args) where T : Component
+        {
+            // GetComponent<T>() 호출
+            T? existingComponent = GetComponent<T>();
+    
+            // 이미 존재하면 반환
+            if (existingComponent != null) 
+                return existingComponent;
 
-    public T GetComponent<T>() where T : Component, new()
-    {
-        T comp = new T();
-        if(!_components.TryGetValue(comp.Name, out Component? component))
-            return null;
+            T component = (T)Activator.CreateInstance(typeof(T), args)!;
+            component.OnAttach(this);
+            _components.Add(component);
+            return component;
+        }
         
-        return (T)component;
+
+        // 특정 타입의 컴포넌트를 가져오기
+        public T? GetComponent<T>() where T : Component
+        {
+            return _components.Find(c => c is T) as T;
+        }
+
+
+        //초기 컴포넌트 생성 
+        public virtual void Initialize()
+        {
+            AddComponent<Transform>();
+            AddComponent<Renderer>();
+        }
+
+        // 모든 컴포넌트 업데이트 진행
+        public void Update(float deltaTime)
+        {
+            foreach (var component in _components)
+            {
+                if (component.IsActive)
+                {
+                    component.Update(deltaTime);
+                }
+            }
+        }
+
+        // 메시지 브로드캐스트 (모든 컴포넌트로 전달)
+        public void BroadcastEvent(string eventKey, object? data = null)
+        {
+            if (_eventHandlers.TryGetValue(eventKey, out var handler))
+            {
+                if (data != null)
+                    handler.Invoke(data);
+            }
+
+            foreach (var component in _components)
+            {
+                if (data != null)
+                component.OnMessageReceived(eventKey, data); // 모든 컴포넌트로 메시지 전달
+            }
+        }
+
+        // 메시지 핸들러 추가
+        public void RegisterEventHandler(string eventKey, Action<object> handler)
+        {
+            if (!_eventHandlers.ContainsKey(eventKey))
+            {
+                _eventHandlers[eventKey] = handler;
+            }
+        }
+
+        // 메시지 핸들러 제거
+        public void UnregisterEventHandler(string eventKey)
+        {
+            if (_eventHandlers.ContainsKey(eventKey))
+            {
+                _eventHandlers.Remove(eventKey);
+            }
+        }
     }
 }

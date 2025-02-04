@@ -14,9 +14,7 @@ public class Animation
         _currentFrame = 0;
         _timeSinceLastFrame = 0;
     }
-
-
-
+    
     public void Update(float deltaTime)
     {
         _timeSinceLastFrame += deltaTime;

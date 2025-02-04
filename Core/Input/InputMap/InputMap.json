@@ -1,14 +1,35 @@
 {
-  "Escape": "Escape",
-  "MoveUp": "UpArrow",
-  "MoveDown": "DownArrow",
-  "MoveLeft": "LeftArrow",
-  "MoveRight": "RightArrow",
-  "Jump": "Spacebar",
-  "Attack": "J",
-  "UpArrow": "UpArrow",
-  "DownArrow": "DownArrow",
-  "LeftArrow": "LeftArrow",
-  "RightArrow": "RightArrow",
-  "Enter" : "Enter"
+  "Escape": [
+    "Escape"
+  ],
+  "Enter": [
+    "Enter"
+  ],
+  "MoveUp": [
+    "W","UpArrow"
+  ],
+  "MoveDown": [
+    "S","DownArrow"
+  ],
+  "MoveLeft": [
+    "A","LeftArrow"
+  ],
+  "MoveRight": [
+    "D", "RightArrow"
+  ],
+  "Jump": [
+    "Spacebar"
+  ],
+  "LeftArrow": [
+    "LeftArrow"
+  ],
+  "RightArrow": [
+    "RightArrow"
+  ],
+  "UpArrow": [
+    "UpArrow"
+  ],
+  "DownArrow": [
+    "DownArrow"
+  ]
 }

@@ -23,3 +23,4 @@ class Program
         Console.WriteLine("게임 종료!");
     }
 }
+

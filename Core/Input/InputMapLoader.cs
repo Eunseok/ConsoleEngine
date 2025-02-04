@@ -1,25 +1,25 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Core.Input;
 
 public static class InputMapLoader
 {
-    private static readonly string DatPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Input/InputMap", "InputMap.json");
+    private static readonly string DatPath =
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Input/InputMap", "InputMap.json");
 
-    private static readonly Dictionary<string, ConsoleKey> MappingKeys = new()
+    private static readonly Dictionary<string, List<string>> MappingKeys = new()
     {
-        { "Escape", ConsoleKey.Escape },
-        { "MoveUp", ConsoleKey.W },
-        { "MoveDown", ConsoleKey.S },
-        { "MoveLeft", ConsoleKey.A },
-        { "MoveRight", ConsoleKey.D },
-        { "Jump", ConsoleKey.Spacebar },
-        { "Attack", ConsoleKey.J }
+        { "Escape", new List<string> { "Escape" } },
+        { "MoveUp", new List<string> { "W" } },
+        { "MoveDown", new List<string> { "S" } },
+        { "MoveLeft", new List<string> { "A" } },
+        { "MoveRight", new List<string> { "D" } },
+        { "Jump", new List<string> { "Spacebar" } },
+        { "Attack", new List<string> { "J" } }
     };
 
     // 데이터 로드 (역직렬화)
-    public static Dictionary<string, ConsoleKey> LoadData()
+    public static Dictionary<string, List<string>> LoadData()
     {
         if (!File.Exists(DatPath))
         {
@@ -30,12 +30,21 @@ public static class InputMapLoader
         try
         {
             string json = File.ReadAllText(DatPath);
-            return JsonConvert.DeserializeObject<Dictionary<string, ConsoleKey>>(json)?? MappingKeys;
+
+            // JSON 파일을 Dictionary<string, List<string>>로 역직렬화
+            var loadedData = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
+            if (loadedData != null)
+            {
+                return loadedData;
+            }
+
+            Console.WriteLine("JSON 데이터를 로드하지 못했습니다. 기본 데이터로 초기화합니다.");
+            return MappingKeys;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"데이터 로드 중 오류 발생: {ex.Message}");
-            return new Dictionary<string, ConsoleKey>();
+            return MappingKeys;
         }
     }
 
@@ -44,11 +53,10 @@ public static class InputMapLoader
     {
         try
         {
-            // JSON 변환 설정: StringEnumConverter 추가
+            // 들여쓰기 설정 추가
             var settings = new JsonSerializerSettings
             {
-                Converters = { new StringEnumConverter() }, // ConsoleKey 값을 문자열로 변환
-                Formatting = Formatting.Indented // 들여쓰기 설정
+                Formatting = Formatting.Indented // 읽기 쉽게 출력
             };
 
             // MappingKeys 데이터를 JSON으로 직렬화
