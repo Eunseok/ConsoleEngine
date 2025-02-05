@@ -94,14 +94,14 @@ public class GameManager : Script
                 DefaltUpdate(deltaTime);
                 break;
             case State.Menu:
-                MenuUpdate(deltaTime);
+               // MenuUpdate(deltaTime);
                 break;
         }
     }
 
     public void DefaltUpdate(float deltaTime)
     {
-        if (InputManager.GetKey("Menu"))
+        if (InputManager.GetKeyDown("Menu"))
         {
             Instance.Menu?.SetActive(!Instance.Menu.IsActive());
             if (Instance.Menu?.IsActive() == true)
@@ -120,7 +120,7 @@ public class GameManager : Script
 
     public void MenuUpdate(float deltaTime)
     {
-        if (InputManager.GetKey("Menu"))
+        if (InputManager.GetKeyDown("Menu"))
         {
             if (Instance.Menu?.IsActive() != true) return;
 

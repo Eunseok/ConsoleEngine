@@ -38,7 +38,7 @@ namespace Core.Components
             if (IsFocused)
             {
                 // 포커스된 상태에서 클릭 감지
-                if (InputManager.GetKey("Enter"))
+                if (InputManager.GetKeyDown("Enter"))
                 {
                     SendMessage("OnClick", this);
                 }
