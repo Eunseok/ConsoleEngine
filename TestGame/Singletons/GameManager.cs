@@ -76,7 +76,10 @@ public class GameManager : Script
             CreateInfoMessage("판매에 성공했습니다.", ConsoleColor.Blue));
         ;
         Owner?.RegisterEventHandler("RestingSuccess", _ =>
-            CreateInfoMessage("체력을 전부 회복했습니다.", ConsoleColor.Green));
+            CreateInfoMessage("체력을 전부 회복했습니다.", ConsoleColor.Green)); 
+        Owner?.RegisterEventHandler("Health", _ =>
+            CreateInfoMessage("휴식이 필요합니다.", ConsoleColor.Yellow));
+     
         ;
     }
 

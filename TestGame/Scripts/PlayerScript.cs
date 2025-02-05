@@ -239,6 +239,12 @@ namespace TestGame.Scripts
 
         private void DungeonEntry(string name, int type)
         {
+            if (CurHp <= 0)
+            {
+                GameManager.Instance.Owner.BroadcastEvent("Health");
+                return;
+            }
+            
             int def = GameManager.Instance.DungeonDef[type];
             if (GetStats().Def < def)
             {
