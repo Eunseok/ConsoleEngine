@@ -26,8 +26,9 @@ public class TitleScene : Scene
         box.SetOrder(10);
         box.AddComponent<CursurScript>();
         
-        var titleBox = Instantiate<BoxObject>(new Vector2<int>(0, -6),box);
+        var titleBox = Instantiate<BoxObject>(new Vector2<int>(0, -6), box);
         titleBox.SetSize(20,5);
+        titleBox.SetOrder(1);
         Instantiate<LabelObject>(Vector2<int>.Zero(), titleBox).SetText("스파르타 던전", ConsoleColor.Blue);
         string[] str;
         if (LoadManager.HasPlayData())
