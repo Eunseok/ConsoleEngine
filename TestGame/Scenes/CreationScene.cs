@@ -39,7 +39,7 @@ public class CreationScene : Scene
                 Console.SetCursorPosition(Game.ConsoleCenter.X - 4, Game.ConsoleCenter.Y);
                 name = Console.ReadLine();
             }
-            creationObject.GetComponent<CreationScript>()?.SetPlayerName(name);
+            creationObject.GetComponent<CreationScript>()?.SetPlayerName(name.Substring(0,8));
             Console.CursorVisible = false;
         }
     }
