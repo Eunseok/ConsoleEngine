@@ -51,7 +51,7 @@ namespace Core.Objects
             T gameObject = new T();
 
             // 자식 추가 
-            parent.AddChild(gameObject);
+            parent?.AddChild(gameObject);
 
             // Scene에 추가
             SceneManager.CurrentScene?.AddObject(gameObject);
@@ -99,18 +99,26 @@ namespace Core.Objects
             
         }
         
-        public static void Destroy(string name,float delay = 0.0f)
+        // public static void Destroy(string name,float delay = 0.0f)
+        // {
+        //     
+        //     // Scene에서 제거할 GameObject 리스트에 추가
+        //     SceneManager.CurrentScene.DestroyedObject(name, delay);
+        //     
+        // }
+        public static void DontDestroyOnLoad(GameObject gameObject)
         {
             
             // Scene에서 제거할 GameObject 리스트에 추가
-            SceneManager.CurrentScene.DestroyedObject(name, delay);
+            SceneManager.CurrentScene.DontDestroyOnLoad(gameObject);
             
         }
-
-        public static void ObjectSort()
-        {
-            SceneManager.CurrentScene.ObjectSort();
-        }
         
+
+        // public static void ObjectSort()
+        // {
+        //     SceneManager.CurrentScene.ObjectSort();
+        // }
+        //
     }
 }

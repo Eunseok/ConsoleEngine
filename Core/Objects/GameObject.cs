@@ -17,6 +17,7 @@ namespace Core.Objects
         public bool IsActive() => Parent?.IsActive() ?? _isActive;
         public bool IsDestroyed { get; set; } = false;
 
+        
         public void SetActive(bool isActive)
         {
             _isActive = isActive;
@@ -120,6 +121,15 @@ namespace Core.Objects
 
             return component;
         }
+        public void AttachComponent(Component component)
+        {
+            if (!_components.Contains(component)) // 중복 추가 방지
+            {
+                component.OnAttach(this);
+                _components.Add(component);
+                component.Initialize();
+            }
+        }
 
         public T AddComponent<T>(params object[] args) where T : Component
         {
@@ -138,13 +148,6 @@ namespace Core.Objects
             return component;
         }
         
-        public void AddGameManager(Component gameManager) 
-        {
-            gameManager.OnAttach(this);
-            _components.Add(gameManager);
-            gameManager.Initialize();
-
-        }
 
         // 특정 타입의 컴포넌트를 가져오기
         public T? GetComponent<T>() where T : Component

@@ -7,7 +7,6 @@ using Core.Objects;
 using Core.Scenes;
 using TestGame.Scripts;
 using TestGame.Singletons;
-using TextRPG;
 using static Core.Objects.Object;
 
 namespace TestGame.Scenes
@@ -21,8 +20,10 @@ namespace TestGame.Scenes
         // TestScene의 초기화 코드
         public override void Initialize()
         {
-            GameObject gameManager = Instantiate<GameObject>(Vector2<int>.Zero());
-            gameManager.AddGameManager(GameManager.Instance);
+            GameObject gameManager = Instantiate<EmptyObject>(Vector2<int>.Zero());
+            gameManager.AddComponent<GameManager>();
+
+
             //Player Object생성
             GameObject player = Instantiate<GameObject>(Game.ConsoleCenter);
 
@@ -35,17 +36,20 @@ namespace TestGame.Scenes
             });
 
             player.AddComponent<Animator>().SetAnimation(anim);
-            PlayerScript playerScript = player.AddComponent<PlayerScript>();
-
-            string name = CreationManager.Instance.PlayerName;
-            string job = CreationManager.Instance.PlayerJob;
-            playerScript.SetPlayerInfo(name, job);
-            GameManager.Instance.Player = playerScript;
-
-            player.RegisterEventHandler("ShowShop", _ => CreateShop());
+            //playerScript
+            if (GameManager.Instance.Player != null)
+            {
+                player.AttachComponent(GameManager.Instance.Player);
+            }
+            else
+            {
+                player.AddComponent<PlayerScript>();
+                GameManager.Instance.Player = player.GetComponent<PlayerScript>();
+            }
+            
+            
+        player.RegisterEventHandler("ShowShop", _ => CreateShop());
             player.RegisterEventHandler("ShowDungeon", _ => CreateDungeon());
-
-
 
             Instantiate<LabelObject>(new Vector2<int>(3, 0)).SetText("[M]Menu");
 
@@ -76,17 +80,16 @@ namespace TestGame.Scenes
             {
                 var arrow = Instantiate<GameObject>(new Vector2<int>(0, Game.ConsoleCenter.Y));
                 Sprite sprite = SpriteLoader.LoadFromFile("Assets/LeftArrow.txt");
-                arrow.GetComponent<Renderer>().SetSprite(sprite);
+                arrow.GetComponent<Renderer>()?.SetSprite(sprite);
                 arrow.SetOrder(-1);
             }
             ///던전 화살표
             {
                 var arrow = Instantiate<GameObject>(new Vector2<int>(Console.WindowWidth - 5, Game.ConsoleCenter.Y));
                 Sprite sprite = SpriteLoader.LoadFromFile("Assets/RightArrow.txt");
-                arrow.GetComponent<Renderer>().SetSprite(sprite);
+                arrow.GetComponent<Renderer>()?.SetSprite(sprite);
                 arrow.SetOrder(-1);
             }
-            ObjectSort();
 
             GameManager.Instance.Owner?.RegisterEventHandler("ShowStatus", _ => CreateStatus());
             GameManager.Instance.Owner?.RegisterEventHandler("ShowInventory", _ => CreateInventory());
@@ -110,8 +113,8 @@ namespace TestGame.Scenes
             
             GameManager.Instance.Owner?.RegisterEventHandler("Save", _ =>
             {
-                DataLoader.SavePlayerData(GameManager.Instance.Player);
-               // SceneManager.SetActiveScene("TitleScene");
+                LoadManager.SavePlayerData(GameManager.Instance?.Player ?? new PlayerScript());
+               SceneManager.SetActiveScene("TitleScene");
             });
         }
 
@@ -136,11 +139,10 @@ namespace TestGame.Scenes
             {
                 Destroy(box);
                 GameManager.Instance.Owner?.BroadcastEvent("CloseMenu");
-                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
+                GameManager.Instance.Owner?.BroadcastEvent("PlayerCanMove");
             });
 
             btn.SetLabel("닫기");
-            ObjectSort();
         }
 
         private void DungeonClear(string dungeonName, string hpStr, string goldStr)
@@ -164,13 +166,13 @@ namespace TestGame.Scenes
             btn.RegisterEventHandler("OnClick", _ =>
             {
                 Destroy(box);
-                GameManager.Instance.Owner?.BroadcastEvent("CloseMenu");
-                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
+                GameManager.Instance?.Owner?.BroadcastEvent("CloseMenu");
+                GameManager.Instance?.Owner?.BroadcastEvent("PlayerCanMove");
             });
 
             btn.SetLabel("닫기");
-            ObjectSort();
         }
+
 
         private void CreateStatus()
         {
@@ -180,19 +182,18 @@ namespace TestGame.Scenes
             var status = Instantiate<GameObject>(box);
             status.SetOrder(100);
             Renderer renderer = status.AddComponent<Renderer>();
-            Sprite sprite = Sprite.FromString(GameManager.Instance.Player.ToString());
+            Sprite sprite = Sprite.FromString(GameManager.Instance?.Player?.ToString() ?? "");
             renderer.SetSprite(sprite);
             var btn = Instantiate<ButtonObject>(new Vector2<int>(0, 7), box);
             btn.RegisterEventHandler("OnClick", _ =>
             {
                 Destroy(box);
-                GameManager.Instance.Owner?.BroadcastEvent("CloseMenu");
-                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
+                GameManager.Instance?.Owner.BroadcastEvent("CloseMenu");
+                GameManager.Instance?.Owner.BroadcastEvent("PlayerCanMove");
             });
             Game.CursorPosition = btn.GlobalPosition;
 
             btn.SetLabel("닫기");
-            ObjectSort();
         }
 
         private void CreateInventory()
@@ -203,7 +204,7 @@ namespace TestGame.Scenes
             var inventoryScript = box.AddComponent<CursurScript>();
 
             int i = 0;
-            foreach (var item in GameManager.Instance?.Player?.Inventory)
+            foreach (var item in GameManager.Instance.Player?.Inventory)
             {
                 var itemBtn = Instantiate<ButtonObject>(new Vector2<int>(0, -10 + i++ * 2), box);
                 string text = item.isEquipped ? "[E] " + item.ToString() : item.ToString();
@@ -223,12 +224,11 @@ namespace TestGame.Scenes
             btn.RegisterEventHandler("OnClick", _ =>
             {
                 Destroy(box);
-                GameManager.Instance.Owner?.BroadcastEvent("CloseMenu");
-                GameManager.Instance.Owner.BroadcastEvent("PlayerCanMove");
+                GameManager.Instance?.Owner.BroadcastEvent("CloseMenu");
+                GameManager.Instance?.Owner.BroadcastEvent("PlayerCanMove");
             });
 
             btn.SetLabel("닫기");
-            ObjectSort();
         }
 
         private void CreateShop()
@@ -239,7 +239,7 @@ namespace TestGame.Scenes
             var shopScript = box.AddComponent<ShopScript>();
             var shop = Instantiate<LabelObject>(new Vector2<int>(0, -10), box);
             shop.SetText("[ 상 점 ]");
-            foreach (var item in DataLoader.Items)
+            foreach (var item in LoadManager.Items)
             {
                 var itemBtn = Instantiate<LabelObject>(new Vector2<int>(0, -10 + item.ID * 2), box);
                 // string text = item.isEquipped ?  item.ToString() : item.ToString();
@@ -252,7 +252,7 @@ namespace TestGame.Scenes
             }
 
             var gold = Instantiate<LabelObject>(new Vector2<int>(20, -10), box);
-            gold.SetText("현재 골드: " + GameManager.Instance?.Player.Gold.ToString() + "G", ConsoleColor.Yellow);
+            gold.SetText("현재 골드: " + GameManager.Instance?.Player?.Gold.ToString() + "G", ConsoleColor.Yellow);
 
 
             string[] str =
@@ -273,8 +273,7 @@ namespace TestGame.Scenes
                 });
                 btn.SetLabel(label);
             }
-
-            ObjectSort();
+            
         }
 
         private void CreateBuying()
@@ -285,7 +284,7 @@ namespace TestGame.Scenes
             var inventoryScript = box.AddComponent<CursurScript>();
             var shop = Instantiate<LabelObject>(new Vector2<int>(0, -10), box);
             shop.SetText("[ 상 점 ] - 구매");
-            foreach (var item in DataLoader.Items)
+            foreach (var item in LoadManager.Items)
             {
                 var itemBtn = Instantiate<ButtonObject>(new Vector2<int>(0, -10 + item.ID * 2), box);
                 string text = item.ToString() + "| ";
@@ -297,14 +296,14 @@ namespace TestGame.Scenes
                 itemBtn.SetLabel(text);
                 itemBtn.RegisterEventHandler("OnClick", _ =>
                 {
-                    GameManager.Instance.Owner?.BroadcastEvent("BuyItem", item);
+                    GameManager.Instance?.Owner?.BroadcastEvent("BuyItem", item);
                     Destroy(box);
                     CreateBuying();
                 });
             }
 
             var gold = Instantiate<LabelObject>(new Vector2<int>(20, -10), box);
-            gold.SetText("현재 골드: " + GameManager.Instance?.Player.Gold.ToString() + "G", ConsoleColor.Yellow);
+            gold.SetText("현재 골드: " + GameManager.Instance?.Player?.Gold.ToString() + "G", ConsoleColor.Yellow);
 
             var btn = Instantiate<ButtonObject>(new Vector2<int>(0, 10), box);
             btn.RegisterEventHandler("OnClick", _ =>
@@ -314,7 +313,6 @@ namespace TestGame.Scenes
             });
 
             btn.SetLabel("취소");
-            ObjectSort();
         }
 
         private void CreateSelling()
@@ -326,7 +324,7 @@ namespace TestGame.Scenes
             var shop = Instantiate<LabelObject>(new Vector2<int>(0, -10), box);
             shop.SetText("[ 상 점 ] - 판매");
             int i = 1;
-            foreach (var item in GameManager.Instance.Player?.Inventory)
+            foreach (var item in GameManager.Instance.Player.Inventory)
             {
                 var itemBtn = Instantiate<ButtonObject>(new Vector2<int>(0, -10 + i++ * 2), box);
                 string text = item.ToString() + "| ";
@@ -356,7 +354,6 @@ namespace TestGame.Scenes
             });
 
             btn.SetLabel("취소");
-            ObjectSort();
         }
 
         private void CreateResting()
@@ -395,7 +392,6 @@ namespace TestGame.Scenes
             btn2.SetLabel("취소");
 
 
-            ObjectSort();
         }
 
         private void CreateDungeon()
@@ -413,19 +409,19 @@ namespace TestGame.Scenes
             string[] dungeonDiff = GameManager.Instance.DungeonDiff;
             int[] dungeonDef = GameManager.Instance.DungeonDef;
 
-            for (int i = 0; i < GameManager.Instance.DungeonDiff.Length; i++)
+            for (int i = 0; i < GameManager.Instance?.DungeonDiff.Length; i++)
             {
                 string diff = dungeonDiff[i];
                 int type = i;
                 
                 var dungeon = Instantiate<ButtonObject>(new Vector2<int>(0, -2 + i * 3), box);
                 dungeon.SetLabel($"{dungeonDiff[i]} | 방어력 {dungeonDef[i]} 이상 권장");
-                if (GameManager.Instance.Player.GetStats().Def < dungeonDef[i])
+                if (GameManager.Instance?.Player?.GetStats().Def < dungeonDef[i])
                     dungeon.SetLabelColor(ConsoleColor.Red);
                 dungeon.RegisterEventHandler("OnClick", _ =>
                 {
                     Destroy(box);
-                    GameManager.Instance.Owner?.BroadcastEvent("DungeonEntry", (diff, type));
+                    GameManager.Instance?.Owner?.BroadcastEvent("DungeonEntry", (diff, type));
                 });
             }
 
@@ -433,11 +429,11 @@ namespace TestGame.Scenes
             btn.RegisterEventHandler("OnClick", _ =>
             {
                 Destroy(box);
-                GameManager.Instance.Owner?.BroadcastEvent("CloseMenu");
+                GameManager.Instance?.Owner.BroadcastEvent("CloseMenu");
+                GameManager.Instance?.Owner.BroadcastEvent("PlayerCanMove");
             });
 
             btn.SetLabel("나가기");
-            ObjectSort();
         }
 
         // 특정 로직 실행 (예: 업데이트 로직)

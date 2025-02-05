@@ -15,7 +15,7 @@ public class Game
     {
         InputManager.Initialize();
 
-        SceneManager.SetActiveScene("MainScene");
+        SceneManager.SetActiveScene("TitleScene");
     }
 
     public void Run()

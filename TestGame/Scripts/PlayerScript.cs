@@ -51,13 +51,6 @@ namespace TestGame.Scripts
         private LabelObject? _job;
         private LabelObject? _level;
 
-        public enum State
-        {
-            Idle,
-            Walking
-        };
-
-        State _state = State.Idle;
 
         public override void Initialize()
         {
@@ -72,7 +65,7 @@ namespace TestGame.Scripts
             GameManager.Instance.Owner?.RegisterEventHandler("ShowMenu", o => { Owner.SetActive(false); });
             GameManager.Instance.Owner?.RegisterEventHandler("ShowInventory", o => { Owner.SetActive(false); });
             GameManager.Instance.Owner?.RegisterEventHandler("ShowRest", o => { Owner.SetActive(false); });
-            GameManager.Instance.Owner?.RegisterEventHandler("ShowDungeon", o => { Owner.SetActive(false); });
+            Owner.RegisterEventHandler("ShowDungeon", o => { Owner.SetActive(false); });
             Owner.RegisterEventHandler("ShowShop", o => { Owner.SetActive(false); });
             GameManager.Instance.Owner?.RegisterEventHandler("PlayerCanMove", o => { Owner.SetActive(true); });
             GameManager.Instance.Owner?.RegisterEventHandler("Resting", o => Resting());
@@ -111,13 +104,13 @@ namespace TestGame.Scripts
             Input();
             if (Owner.GlobalPosition.X < 10)
             {
-                Owner.GetComponent<Transform>().SetPosition(Game.ConsoleCenter);
+                Owner.GetComponent<Transform>()?.SetPosition(Game.ConsoleCenter);
                 SendMessage("ShowShop");
             }
 
             if (Owner.GlobalPosition.X > Console.WindowWidth - 10)
             {
-                Owner.GetComponent<Transform>().SetPosition(Game.ConsoleCenter);
+                Owner.GetComponent<Transform>()?.SetPosition(Game.ConsoleCenter);
                 SendMessage("ShowDungeon");
             }
         }
@@ -137,18 +130,6 @@ namespace TestGame.Scripts
             if (InputManager.GetKey("DownArrow"))
                 velocity.Y += 1;
 
-            Move(velocity);
-        }
-
-        private void Move(Vector2<int> velocity)
-        {
-            if (velocity == Vector2<int>.Zero())
-            {
-                _state = State.Idle;
-                return;
-            }
-
-            _state = State.Walking;
             Owner?.GetComponent<Transform>()?.Translate(velocity);
         }
 

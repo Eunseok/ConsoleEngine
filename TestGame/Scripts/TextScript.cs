@@ -25,8 +25,8 @@ namespace TestGame.Scripts
             _label = Owner.GetComponent<LabelComponent>();
 
             // Sprite 안의 데이터를 "한 줄"의 텍스트로 처리
-            _fullText = _label?.ToString();
-            _label.SetLabel("");
+            _fullText = _label?.ToString() ?? "";
+            _label?.SetLabel("");
         }
 
         protected override void OnUpdate(float deltaTime)

@@ -11,8 +11,8 @@ public class ItemScript: Script
         Accessory
     }
     public int ID { get; set; }
-    public string strName { get; set; }
-    public ItemType Type { get; set; }
+    public string? strName { get; set; }
+    public ItemType? Type { get; set; }
     public string strDescription { get; set; }
     public float iEffect { get; set; }
     public int iPrice { get; set; }

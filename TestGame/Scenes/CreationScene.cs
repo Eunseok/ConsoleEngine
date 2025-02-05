@@ -12,14 +12,15 @@ namespace TestGame.Scenes;
 
 public class CreationScene : Scene
 {
+    GameObject creationObject;
     public CreationScene() : base("CreationScene")
     {
     }
 
     public override void Initialize()
     {
-        GameObject gameManager = new GameObject();
-        gameManager.AddComponent<CreationManager>();
+         creationObject = Instantiate<GameObject>(Vector2<int>.Zero());
+         creationObject.AddComponent<CreationScript>();
     }
 
 
@@ -28,12 +29,17 @@ public class CreationScene : Scene
         base.Update(deltaTime); // Scene 기본 로직 호출
         // 추가 로직 구현
 
-        if (CreationManager.Instance.IsInputEnabled)
+        if (creationObject.GetComponent<CreationScript>()?.IsInputEnabled ?? false)
         {
-      
             Console.CursorVisible = true;
-            Console.SetCursorPosition(Game.ConsoleCenter.X - 4, Game.ConsoleCenter.Y);
-            CreationManager.Instance.SetPlayerName(Console.ReadLine());
+           
+            string? name = "";
+            while (string.IsNullOrEmpty(name))
+            {
+                Console.SetCursorPosition(Game.ConsoleCenter.X - 4, Game.ConsoleCenter.Y);
+                name = Console.ReadLine();
+            }
+            creationObject.GetComponent<CreationScript>()?.SetPlayerName(name);
             Console.CursorVisible = false;
         }
     }

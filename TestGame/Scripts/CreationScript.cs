@@ -9,16 +9,12 @@ using static Core.Objects.Object;
 
 namespace TestGame.Singletons;
 
-public class CreationManager : Script
+public class CreationScript : Script
 {
-    // 싱글톤 인스턴스
-    private static CreationManager? _instance;
-    public static CreationManager Instance => _instance ??= new CreationManager();
-
     public bool IsInputEnabled { get; set; } = false;
 
-    public string PlayerName{ get; private set; }  = "Unknown";
-    public string PlayerJob { get; private set; } = "Unknown";
+    public string PlayerName{ get; private set; }  = "";
+    public string PlayerJob { get; private set; } = "";
 
     private static readonly string[] WelcomeMessages =
     {
@@ -69,10 +65,10 @@ public class CreationManager : Script
     private State _state = State.Name;
     
     private LabelObject? _message = null;
-    private ButtonObject[]? _confirmBtn = new ButtonObject[2];
+    private readonly ButtonObject[] _confirmBtn = new ButtonObject[2];
     
 
-    public CreationManager()
+    public CreationScript()
     {
     }
 
@@ -99,6 +95,7 @@ public class CreationManager : Script
         // 배열 범위 초과 방지 처리 추가
         if (_messageIndex >= WelcomeMessages.Length)
         {
+            GameManager.Instance?.Player?.SetPlayerInfo(PlayerName, PlayerJob);
             SceneManager.SetActiveScene("MainScene");
             return;
         }
@@ -114,7 +111,7 @@ public class CreationManager : Script
                 break;
             case 5:
                 SetActiveConfirmButton(true, ClassName);
-                _message.SetText(InputMessages[_inputIndex]);
+                _message?.SetText(InputMessages[_inputIndex]);
                 break;
 
             default:
@@ -145,14 +142,14 @@ public class CreationManager : Script
         PlayerName = name;
         IsInputEnabled = false;
         SetActiveConfirmButton(true, ConfirmSelect);
-        _message.SetText($"당신의 이름은 \"{PlayerName}\" 이 맞습니까?");
+        _message?.SetText($"당신의 이름은 \"{PlayerName}\" 이 맞습니까?");
     }
 
     public void SetClassName(string name)
     {
         PlayerJob = name;
         SetActiveConfirmButton(true, ConfirmSelect);
-        _message.SetText($"당신의 직업이 \"{PlayerJob}\" 맞습니까?");
+        _message?.SetText($"당신의 직업이 \"{PlayerJob}\" 맞습니까?");
     }
 
 
