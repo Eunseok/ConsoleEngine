@@ -51,7 +51,7 @@ namespace TestGame.Scenes
         player.RegisterEventHandler("ShowShop", _ => CreateShop());
             player.RegisterEventHandler("ShowDungeon", _ => CreateDungeon());
 
-            Instantiate<LabelObject>(new Vector2<int>(3, 0)).SetText("[M]Menu(한/영키 확인)");
+            Instantiate<LabelObject>(new Vector2<int>(3, 0)).SetText("[M]Menu");
 
             var menu = Instantiate<BoxObject>(new Vector2<int>(Game.ConsoleCenter.X, 10));
             menu.SetActive(false);
