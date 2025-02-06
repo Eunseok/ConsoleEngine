@@ -62,25 +62,24 @@ public class GameManager : Script
         //Owner?.RegisterEventHandler("Save", _ => SetState(State.Save));;
         Owner?.RegisterEventHandler("Already", _ =>
             CreateInfoMessage("이미 보유한 장비입니다.", ConsoleColor.Red));
-        ;
+        
         Owner?.RegisterEventHandler("Already", _ =>
             CreateInfoMessage("이미 보유한 장비입니다.", ConsoleColor.Red));
-        ;
+        
         Owner?.RegisterEventHandler("LessMoney", _ =>
             CreateInfoMessage("골드가 부족합니다.", ConsoleColor.Red));
-        ;
+        
         Owner?.RegisterEventHandler("BuySuccess", _ =>
             CreateInfoMessage("구매에 성공했습니다.", ConsoleColor.Blue));
-        ;
+        
         Owner?.RegisterEventHandler("SellSuccess", _ =>
             CreateInfoMessage("판매에 성공했습니다.", ConsoleColor.Blue));
-        ;
-        Owner?.RegisterEventHandler("RestingSuccess", _ =>
+        
+        Owner?.RegisterEventHandler("Restinㅅ5ㄱ43ㄷ2gSuccess", _ =>
             CreateInfoMessage("체력을 전부 회복했습니다.", ConsoleColor.Green)); 
         Owner?.RegisterEventHandler("Health", _ =>
             CreateInfoMessage("휴식이 필요합니다.", ConsoleColor.Yellow));
-     
-        ;
+        
     }
 
     public void SetState(State state)

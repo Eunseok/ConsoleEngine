@@ -37,7 +37,7 @@ public class CreationScene : Scene
             while (string.IsNullOrEmpty(name))
             {
                 Console.SetCursorPosition(Game.ConsoleCenter.X - 4, Game.ConsoleCenter.Y);
-                name = Console.ReadLine();
+                name = Console.ReadLine().Replace(" ", "");
             }
             creationObject.GetComponent<CreationScript>()?.SetPlayerName(name);
             Console.CursorVisible = false;
